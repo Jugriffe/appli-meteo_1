@@ -1,0 +1,213 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 40px;
+    max-width: 600px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+button {
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #667eea;
+}
+
+.erreur {
+    background: #fee;
+    border: 2px solid #fcc;
+    border-radius: 10px;
+    padding: 15px;
+    color: #c33;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.resultats {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    color: #555;
+    margin-bottom: 20px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.meteo-principale {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.temperature {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.temp-valeur {
+    font-size: 72px;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.temp-unite {
+    font-size: 32px;
+    color: #999;
+    margin-left: 5px;
+    margin-top: 10px;
+}
+
+.meteo-icone {
+    font-size: 48px;
+}
+
+.infos-supplementaires {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.info-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.info-label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.info-valeur {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.conseils {
+    background: #f0f4ff;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 30px;
+}
+
+.conseils h3 {
+    color: #667eea;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.conseil-section {
+    margin-bottom: 15px;
+}
+
+.conseil-section p {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    color: #444;
+    line-height: 1.6;
+}
+
+/* Responsive mobile */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 22px;
+    }
+    
+    .temp-valeur {
+        font-size: 56px;
+    }
+    
+    .search-box {
+        flex-direction: column;
+    }
+    
+    button {
+        width: 100%;
+    }
+}

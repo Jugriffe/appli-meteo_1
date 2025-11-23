@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌤️ Météo & Style</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🌤️ Météo & Conseils Vestimentaires</h1>
+        
+        <!-- Formulaire de recherche -->
+        <div class="search-box">
+            <input type="text" id="ville" placeholder="Entrez votre ville..." autofocus>
+            <button onclick="chercherMeteo()">Voir la météo</button>
+        </div>
+        
+        <!-- Zone de chargement -->
+        <div id="loading" class="loading hidden">
+            🔄 Recherche en cours...
+        </div>
+        
+        <!-- Zone d'erreur -->
+        <div id="erreur" class="erreur hidden"></div>
+        
+        <!-- Résultats météo -->
+        <div id="resultats" class="resultats hidden">
+            <h2 id="ville-nom"></h2>
+            
+            <div class="meteo-principale">
+                <div class="temperature">
+                    <span class="temp-valeur" id="temperature"></span>
+                    <span class="temp-unite">°C</span>
+                </div>
+                <div class="meteo-icone" id="meteo-description"></div>
+            </div>
+            
+            <div class="infos-supplementaires">
+                <div class="info-item">
+                    <span class="info-label">💨 Vent</span>
+                    <span class="info-valeur" id="vent"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💧 Précipitations</span>
+                    <span class="info-valeur" id="precipitation"></span>
+                </div>
+            </div>
+            
+            <!-- Conseils vestimentaires -->
+            <div class="conseils">
+                <h3>👔 Conseils vestimentaires</h3>
+                <div id="conseils-temperature" class="conseil-section"></div>
+                <div id="conseils-vent" class="conseil-section"></div>
+                <div id="conseils-pluie" class="conseil-section"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Fonction pour chercher la météo
+        function chercherMeteo() {
+            const ville = document.getElementById('ville').value.trim();
+            
+            if (!ville) {
+                afficherErreur('Veuillez entrer une ville');
+                return;
+            }
+            
+            // Afficher le chargement
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('resultats').classList.add('hidden');
+            document.getElementById('erreur').classList.add('hidden');
+            
+            // Appel API
+            fetch('/meteo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ville: ville })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.erreur || 'Erreur inconnue');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('loading').classList.add('hidden');
+                afficherResultats(data);
+            })
+            .catch(error => {
+                document.getElementById('loading').classList.add('hidden');
+                afficherErreur(error.message);
+            });
+        }
+        
+        // Fonction pour afficher les résultats
+        function afficherResultats(data) {
+            document.getElementById('ville-nom').textContent = data.ville;
+            document.getElementById('temperature').textContent = Math.round(data.temperature);
+            document.getElementById('meteo-description').textContent = data.conseils.meteo;
+            document.getElementById('vent').textContent = data.vent + ' km/h';
+            document.getElementById('precipitation').textContent = data.precipitation + ' mm';
+            
+            // Conseils température
+            document.getElementById('conseils-temperature').innerHTML = 
+                data.conseils.temperature.map(c => `<p>${c}</p>`).join('');
+            
+            // Conseils vent
+            document.getElementById('conseils-vent').innerHTML = 
+                data.conseils.vent.map(c => `<p>${c}</p>`).join('');
+            
+            // Conseils pluie
+            document.getElementById('conseils-pluie').innerHTML = 
+                data.conseils.pluie.length > 0 
+                ? data.conseils.pluie.map(c => `<p>${c}</p>`).join('')
+                : '<p>☀️ Pas de pluie prévue</p>';
+            
+            document.getElementById('resultats').classList.remove('hidden');
+        }
+        
+        // Fonction pour afficher une erreur
+        function afficherErreur(message) {
+            const erreurDiv = document.getElementById('erreur');
+            erreurDiv.textContent = '❌ ' + message;
+            erreurDiv.classList.remove('hidden');
+        }
+        
+        // Permettre de chercher avec la touche Entrée
+        document.getElementById('ville').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                chercherMeteo();
+            }
+        });
+    </script>
+</body>
+</html>
